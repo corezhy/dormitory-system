@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhy.management.mapper.FloorMapper">
+
+
+    <select id="conditionQueryFloor" resultType="com.zhy.model.vo.FloorVo">
+        select f.id, f.floor_number, f.update_time, b.name as building_name, b.gender_type, m.name as major_name
+        from floor f
+        left join building b on f.building_id = b.id
+        left join major m on f.major_code = m.code
+        <where>
+            <if test="floorDto.buildingId != null">
+                and f.building_id = #{floorDto.buildingId}
+            </if>
+            <!--专业条件：如果传了majorCode,则查“匹配 or 不限”-->
+            <if test="floorDto.majorCode != null">
+                and f.major_code = #{floorDto.majorCode}
+                                 or f.major_code is null
+            </if>
+            <if test="floorDto.gender != null">
+                and b.gender_type = #{floorDto.gender}
+            </if>
+        and b.status = 1
+        </where>
+    </select>
+</mapper>

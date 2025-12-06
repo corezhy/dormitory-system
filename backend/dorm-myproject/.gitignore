@@ -1,0 +1,5 @@
+# 项目排除路径
+/dorm-common/target/
+/dorm-management/target/
+/dorm-model/target/
+/dorm-utils/target/

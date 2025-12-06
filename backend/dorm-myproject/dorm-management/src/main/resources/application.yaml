@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: tlias-web-management
+  #配置数据库的连接信息
+  datasource:
+    url: jdbc:mysql://localhost:3306/dorm-myproject?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useServerPrepStmts=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: zhy196587
+  #告诉 Spring Boot 不要自动配置 Spring Security 相关功能(访问knife4j或swagger就不会要求登录，并且可以正常使用BCrypt)
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+
+#Mybatis-plus的相关配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true  # 可选：开启驼峰命名映射
+    cache-enabled: false               # 可选：关闭二级缓存，避免干扰
+
+#配置事务管理日志级别
+logging:
+  level:
+    org.springframework.jdbc.support.JdbcTransactionManager: debug
+
+#aliyunOSS配置
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    bucket-name: dorm-myproject
+    region: cn-beijing
+

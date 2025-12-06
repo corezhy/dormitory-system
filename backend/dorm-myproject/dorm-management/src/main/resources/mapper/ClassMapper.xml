@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhy.management.mapper.ClassMapper">
+
+
+    <select id="conditionQueryClass" resultType="com.zhy.model.vo.ClassVo">
+        select c.id, c.code, c.name, c.grade, c.counselor, c.update_time, m.name as majorName
+        from class c
+        left join major m on c.major_code = m.code
+        <where>
+            <if test="dto.name != null and dto.name != ''">
+                and c.name like concat('%', #{dto.name}, '%')
+            </if>
+            <if test="dto.majorCode != null and dto.majorCode != ''">
+                and c.major_code = #{dto.majorCode}
+            </if>
+            <if test="dto.grade != null">
+                and c.grade = #{dto.grade}
+            </if>
+        and m.is_enabled = 1
+        </where>
+        order by c.update_time desc
+    </select>
+</mapper>

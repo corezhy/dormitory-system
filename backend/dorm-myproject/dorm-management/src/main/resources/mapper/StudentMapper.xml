@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhy.management.mapper.StudentMapper">
+
+
+    <select id="conditionPageQueryStu" resultType="com.zhy.model.vo.StudentVo">
+        SELECT
+        s.id,
+        s.student_no AS studentNo,
+        s.name AS studentName,
+        s.gender,
+        s.phone,
+        s.status,
+        s.bed_no,
+        s.violation_score,
+        m.name AS majorName,
+        c.name AS className,
+        b.name AS buildingName,
+        f.floor_number AS floorNumber,
+        dr.full_code AS fullCode
+        FROM student s
+        INNER JOIN building b ON s.building_id = b.id
+        INNER JOIN floor f ON s.floor_id = f.id
+        INNER JOIN class c ON s.class_id = c.id
+        INNER JOIN major m ON s.major_code = m.code
+        INNER JOIN dorm_room dr ON s.room_id = dr.id
+        <where>
+            <!-- 学号：精确匹配 -->
+            <if test="dto.studentNo != null and dto.studentNo != ''">
+                AND s.student_no = #{dto.studentNo}
+            </if>
+
+            <!-- 姓名：模糊查询 -->
+            <if test="dto.name != null and dto.name != ''">
+                AND s.name LIKE CONCAT('%', #{dto.name}, '%')
+            </if>
+
+            <!-- 性别 -->
+            <if test="dto.gender != null">
+                AND s.gender = #{dto.gender}
+            </if>
+
+            <!-- 手机号 -->
+            <if test="dto.phone != null and dto.phone != ''">
+                AND s.phone = #{dto.phone}
+            </if>
+
+            <!-- 状态 -->
+            <if test="dto.status != null">
+                AND s.status = #{dto.status}
+            </if>
+
+            <!-- 楼栋ID -->
+            <if test="dto.buildingId != null">
+                AND s.building_id = #{dto.buildingId}
+            </if>
+
+            <!-- 楼层ID -->
+            <if test="dto.floorId != null">
+                AND s.floor_id = #{dto.floorId}
+            </if>
+
+            <!-- 专业Code -->
+            <if test="dto.majorCode != null and dto.majorCode != ''">
+                AND s.major_code = #{dto.majorCode}
+            </if>
+
+            <!-- 班级名称：模糊匹配 class 表的 name 字段 -->
+            <if test="dto.className != null and dto.className != ''">
+                AND c.name LIKE CONCAT('%', #{dto.className}, '%')
+            </if>
+
+            <!-- 宿舍编号（fullCode）：注意这里是 dorm_room.full_code -->
+            <if test="dto.fullCode != null and dto.fullCode != ''">
+                AND dr.full_code = #{dto.fullCode}
+            </if>
+        </where>
+        ORDER BY s.update_time DESC
+    </select>
+</mapper>

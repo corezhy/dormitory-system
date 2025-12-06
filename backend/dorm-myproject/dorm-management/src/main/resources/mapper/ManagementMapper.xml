@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhy.management.mapper.ManagementMapper">
+
+
+    <select id="violationStuCount" resultType="com.zhy.model.vo.ViolationStuVo">
+        SELECT m.name AS major_name, COUNT(*) AS violation_count
+        FROM student s
+                 JOIN major m ON s.major_code = m.code
+        WHERE s.violation_score > 0
+        GROUP BY m.code, m.name
+        ORDER BY violation_count DESC;
+    </select>
+
+    <select id="deptEmpCount" resultType="com.zhy.model.vo.DeptEmpCountVo">
+        SELECT d.dept_name, COUNT(e.id) AS employee_count
+        FROM department d
+                 LEFT JOIN employee e ON d.id = e.dept_id
+        GROUP BY d.id, d.dept_name;
+    </select>
+
+
+</mapper>

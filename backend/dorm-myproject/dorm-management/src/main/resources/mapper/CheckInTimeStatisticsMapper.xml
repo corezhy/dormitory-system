@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhy.management.mapper.CheckInTimeStatisticsMapper">
+
+    <!-- 动态查询入住趋势数据 -->
+    <select id="selectCheckinTrend" resultType="map" parameterType="com.zhy.model.dto.CheckinTrendDTO">
+        <choose>
+            <!-- 近1天：按小时统计 -->
+            <when test="dto.rangeType == 'day'">
+                SELECT
+                CONCAT(LPAD(HOUR(ANY_VALUE(check_in_time)), 2, '0'), ':00') AS time_label,
+                COUNT(*) AS count
+                FROM student
+                WHERE check_in_time IS NOT NULL
+                AND check_in_time >= DATE_SUB(NOW(), INTERVAL 1 DAY)
+                AND status = 1
+                GROUP BY HOUR(check_in_time)
+                ORDER BY HOUR(check_in_time)
+            </when>
+
+            <!-- 近1周：按天统计 -->
+            <when test="dto.rangeType == 'week'">
+                SELECT
+                DATE_FORMAT(ANY_VALUE(check_in_time), '%m-%d') AS time_label,
+                COUNT(*) AS count
+                FROM student
+                WHERE check_in_time IS NOT NULL
+                AND check_in_time >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+                AND status = 1
+                GROUP BY DATE(check_in_time)
+                ORDER BY DATE(check_in_time)
+            </when>
+
+            <!-- 近1月：按周统计 -->
+            <when test="dto.rangeType == 'month'">
+                SELECT
+                CONCAT('第',
+                WEEK(ANY_VALUE(check_in_time), 1) -
+                WEEK(DATE_SUB(ANY_VALUE(check_in_time), INTERVAL DAY(ANY_VALUE(check_in_time))-1 DAY), 1) + 1,
+                '周') AS time_label,
+                COUNT(*) AS count
+                FROM student
+                WHERE check_in_time IS NOT NULL
+                AND check_in_time >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+                AND status = 1
+                GROUP BY YEARWEEK(check_in_time, 1)
+                ORDER BY MIN(check_in_time)
+            </when>
+
+            <!-- 近3月：按月统计 -->
+            <when test="dto.rangeType == 'quarter'">
+                SELECT
+                DATE_FORMAT(check_in_time, '%Y-%m') AS time_label,
+                COUNT(*) AS count
+                FROM student
+                WHERE check_in_time IS NOT NULL
+                AND check_in_time >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
+                AND status = 1
+                GROUP BY DATE_FORMAT(check_in_time, '%Y-%m')
+                ORDER BY time_label
+            </when>
+
+            <!-- 近1年：按月统计 -->
+            <when test="dto.rangeType == 'year'">
+                SELECT
+                DATE_FORMAT(check_in_time, '%Y-%m') AS time_label,
+                COUNT(*) AS count
+                FROM student
+                WHERE check_in_time IS NOT NULL
+                AND check_in_time >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+                AND status = 1
+                GROUP BY DATE_FORMAT(check_in_time, '%Y-%m')
+                ORDER BY time_label
+            </when>
+
+            <!-- 自定义日期范围：按天统计 -->
+            <otherwise>
+                SELECT
+                DATE_FORMAT(ANY_VALUE(check_in_time), '%m-%d') AS time_label,
+                COUNT(*) AS count
+                FROM student
+                WHERE check_in_time IS NOT NULL
+                AND check_in_time BETWEEN #{dto.startDate} AND #{dto.endDate}
+                AND status = 1
+                GROUP BY DATE(check_in_time)
+                ORDER BY DATE(check_in_time)
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 各时间段独立查询方法也需要同样修复 -->
+    <select id="selectCheckinTrendByDay" resultType="map">
+        SELECT
+            CONCAT(LPAD(HOUR(ANY_VALUE(check_in_time)), 2, '0'), ':00') AS time_label,
+            COUNT(*) AS count
+        FROM student
+        WHERE check_in_time IS NOT NULL
+          AND check_in_time >= DATE_SUB(NOW(), INTERVAL 1 DAY)
+          AND status = 1
+        GROUP BY HOUR(check_in_time)
+        ORDER BY HOUR(check_in_time)
+    </select>
+
+    <select id="selectCheckinTrendByWeek" resultType="map">
+        SELECT
+            DATE_FORMAT(ANY_VALUE(check_in_time), '%m-%d') AS time_label,
+            COUNT(*) AS count
+        FROM student
+        WHERE check_in_time IS NOT NULL
+          AND check_in_time >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+          AND status = 1
+        GROUP BY DATE(check_in_time)
+        ORDER BY DATE(check_in_time)
+    </select>
+
+    <select id="selectCheckinTrendByMonth" resultType="map">
+        SELECT
+            CONCAT('第',
+                   WEEK(ANY_VALUE(check_in_time), 1) -
+                   WEEK(DATE_SUB(ANY_VALUE(check_in_time), INTERVAL DAY(ANY_VALUE(check_in_time))-1 DAY), 1) + 1,
+                   '周') AS time_label,
+            COUNT(*) AS count
+        FROM student
+        WHERE check_in_time IS NOT NULL
+          AND check_in_time >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+          AND status = 1
+        GROUP BY YEARWEEK(check_in_time, 1)
+        ORDER BY MIN(check_in_time)
+    </select>
+
+    <select id="selectCheckinTrendByQuarter" resultType="map">
+        SELECT
+            DATE_FORMAT(check_in_time, '%Y-%m') AS time_label,
+            COUNT(*) AS count
+        FROM student
+        WHERE check_in_time IS NOT NULL
+          AND check_in_time >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
+          AND status = 1
+        GROUP BY DATE_FORMAT(check_in_time, '%Y-%m')
+        ORDER BY time_label
+    </select>
+
+    <select id="selectCheckinTrendByYear" resultType="map">
+        SELECT
+            DATE_FORMAT(check_in_time, '%Y-%m') AS time_label,
+            COUNT(*) AS count
+        FROM student
+        WHERE check_in_time IS NOT NULL
+          AND check_in_time >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+          AND status = 1
+        GROUP BY DATE_FORMAT(check_in_time, '%Y-%m')
+        ORDER BY time_label
+    </select>
+
+    <select id="selectCheckinTrendByCustom" resultType="map">
+        SELECT
+            DATE_FORMAT(ANY_VALUE(check_in_time), '%m-%d') AS time_label,
+            COUNT(*) AS count
+        FROM student
+        WHERE check_in_time IS NOT NULL
+          AND check_in_time BETWEEN #{startDate} AND #{endDate}
+          AND status = 1
+        GROUP BY DATE(check_in_time)
+        ORDER BY DATE(check_in_time)
+    </select>
+
+</mapper>

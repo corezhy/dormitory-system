@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhy.management.mapper.DormRoomMapper">
+
+
+    <update id="updateAvailableBedsByCounts">
+        UPDATE dorm_room
+        SET available_beds = CASE id
+        <foreach collection="roomUpdates" item="item">
+            WHEN #{item.roomId} THEN available_beds + #{item.count}
+        </foreach>
+        END
+        WHERE id IN
+        <foreach collection="roomUpdates" item="item" open="(" separator="," close=")">
+            #{item.roomId}
+        </foreach>
+    </update>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO dorm_room (
+        building_id,
+        floor_id,
+        room_number,
+        full_code,
+        capacity,
+        available_beds,
+        status,
+        create_time,
+        update_time
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.buildingId},
+            #{item.floorId},
+            #{item.roomNumber},
+            #{item.fullCode},
+            #{item.capacity},
+            #{item.availableBeds},
+            #{item.status},
+            #{item.createTime},
+            #{item.updateTime}
+            )
+        </foreach>
+    </insert>
+
+    <select id="conditionQueryDormRoom" resultType="com.zhy.model.vo.DormRoomVo">
+        SELECT
+        d.id,
+        b.name AS building_name,
+        f.floor_number,
+        d.full_code,
+        d.capacity,
+        d.available_beds,
+        d.status,
+        m.name AS major_name -- 来自 floor.major_code
+        FROM dorm_room d
+        LEFT JOIN building b ON d.building_id = b.id
+        LEFT JOIN floor f ON d.floor_id = f.id
+        LEFT JOIN major m ON f.major_code = m.code
+        <where>
+            <if test="dto.buildingId != null">
+                and b.id = #{dto.buildingId}
+            </if>
+            <if test="dto.majorCode != null">
+                and f.major_code = #{dto.majorCode}
+            </if>
+            <if test="dto.floorId != null">
+                and d.floor_id = #{dto.floorId}
+            </if>
+        </where>
+        order by d.full_code
+    </select>
+
+</mapper>

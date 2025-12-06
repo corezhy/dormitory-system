@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhy.management.mapper.EmployeeMapper">
+
+
+    <select id="selectEmpAndDeptName" resultType="com.zhy.model.vo.EmployeeVo">
+        select e.id, emp_no, name, gender, phone, id_card, entry_date, position,
+        dept_id, email, avatar, username, password, e.create_time, e.update_time, d.dept_name from employee e
+        left join department d on e.dept_id = d.id
+        <where>
+            <if test="employeeDto.name != null and employeeDto.name != ''">
+                and e.name like concat('%', #{employeeDto.name}, '%')
+            </if>
+            <if test="employeeDto.deptId != null">
+                and e.dept_id = #{employeeDto.deptId}
+            </if>
+            <if test="employeeDto.begin != null and employeeDto.end != null">
+                and e.entry_date between #{employeeDto.begin} and #{employeeDto.end}
+            </if>
+        </where>
+        order by e.update_time desc
+    </select>
+
+
+</mapper>

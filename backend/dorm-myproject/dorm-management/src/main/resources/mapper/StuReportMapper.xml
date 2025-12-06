@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhy.management.mapper.StuReportMapper">
+
+
+    <select id="statisticsStuGenderCount" resultType="com.zhy.model.vo.StuReportGenderVo">
+        SELECT
+            IFNULL(SUM(CASE WHEN gender = 0 THEN 1 ELSE 0 END), 0) AS male_count,
+            IFNULL(SUM(CASE WHEN gender = 1 THEN 1 ELSE 0 END), 0) AS female_count
+        FROM student
+        WHERE status = 1;
+    </select>
+
+    <select id="statisticsStuMajorCount" resultType="com.zhy.model.vo.StuReportMajorVo">
+        SELECT m.name AS major_name, COUNT(*) AS student_count
+        FROM student s
+                 JOIN major m ON s.major_code = m.code
+        WHERE s.status = 1
+        GROUP BY m.code, m.name
+        ORDER BY student_count;
+    </select>
+
+    <select id="statisticsStuBuildingCount" resultType="com.zhy.model.vo.StuReportBuildingVo">
+        SELECT b.name AS building_name, COUNT(*) AS resident_count
+        FROM student s
+                 JOIN building b ON s.building_id = b.id
+        WHERE s.status = 1
+        GROUP BY b.id, b.name;
+    </select>
+
+    <select id="statisticsBedsOccupancyRate" resultType="com.zhy.model.vo.BedStatisticsVO">
+        SELECT
+            SUM(capacity) AS total_beds,
+            SUM(capacity - available_beds) AS occupied_beds
+        FROM dorm_room
+        WHERE status = 1;
+    </select>
+
+
+</mapper>
