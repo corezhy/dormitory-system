@@ -456,7 +456,8 @@ const deleteByIds = () => {
     </el-table-column>
     <el-table-column label="操作" align="center">
       <template #default="scope">
-        <el-button size="default" type="primary" @click="editDorm(scope.row.id)">编辑</el-button>
+        <el-button size="default" type="primary" @click="editDorm(scope.row.id)"
+        :disabled="scope.row.status === 0">编辑</el-button>
         <el-button v-if="scope.row.status === 1" type="warning" size="default"
           @click="startOrStopDorm(scope.row.id, 0)">停用</el-button><!-- 传0是停用 -->
         <el-button v-else-if="scope.row.status === 0" type="success" size="default"
