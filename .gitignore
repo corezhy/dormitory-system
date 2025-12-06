@@ -1,0 +1,30 @@
+# ========== 必须忽略的 ==========
+# 前端
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# 后端
+backend/target/
+backend/build/
+backend/.gradle/
+backend/*.iml
+backend/*.jar
+backend/logs/
+
+# 环境配置
+.env
+.env.local
+*.properties.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
