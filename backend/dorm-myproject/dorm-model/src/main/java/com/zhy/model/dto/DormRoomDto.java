@@ -29,4 +29,7 @@ public class DormRoomDto {
     @ApiModelProperty(value = "楼层id")
     private Long floorId;
 
+    @ApiModelProperty(value = "房间号")
+    private String fullCode;
+
 }

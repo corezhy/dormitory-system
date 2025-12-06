@@ -13,7 +13,8 @@ const searchForm = ref({
   pageSize: 10,
   buildingId: null,
   majorCode: null,
-  floorId: null
+  floorId: null,
+  fullCode: null
 })
 
 //存储楼栋下楼层数据(搜索栏)
@@ -398,29 +399,42 @@ const deleteByIds = () => {
   <!-- 搜索栏 -->
   <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
     楼栋名称:
-    <el-select v-model="searchForm.buildingId" size="large" placeholder="请选择楼栋名称" style="width: 240px"
+    <el-select v-model="searchForm.buildingId" size="large" placeholder="请选择楼栋名称" style="width: 250px"
       @change="queryDorm()">
       <el-option v-for="item in buildingOptions" :key="item.id" :label="item.name" :value="item.id" />
     </el-select>
 
     专业名称:
-    <el-select v-model="searchForm.majorCode" size="large" placeholder="请选择专业名称" style="width: 240px"
+    <el-select v-model="searchForm.majorCode" size="large" placeholder="请选择专业名称" style="width: 250px"
       @change="queryDorm()">
       <el-option v-for="item in majorOptions" :key="item.code" :label="item.name" :value="item.code" />
     </el-select>
 
-    楼层号:
-    <el-select v-model="searchForm.floorId" size="large" placeholder="请选择楼层号" style="width: 240px"
+    <span style="margin-left: 10px;">楼层号:</span>
+    <el-select v-model="searchForm.floorId" size="large" placeholder="请选择楼层号" style="width: 250px;"
       @change="queryDorm()">
       <el-option v-for="item in searchFloorOptions" :key="item.id" :label="item.floorNumber" :value="item.id" />
     </el-select>
-    <el-button type="primary" size="large" @click="clearMethod()">清空</el-button>
+
+    <span style="margin-left: 10px;">房间号:</span>
+    <el-input v-model="searchForm.fullCode" size="large" style="width: 250px" placeholder="请输入房间号" clearable
+      @clear="queryDorm()" />
+    
   </div>
-  <!-- 新增宿舍和批量删除宿舍按钮 -->
-  <div style="margin-bottom: 20px;">
+  <!-- 新增宿舍和批量删除宿舍按钮（左侧） + 查询/清空（右侧） -->
+<div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+  <!-- 左侧：新增、批量删除 -->
+  <div>
     <el-button size="large" type="primary" @click="addDorm()">新增宿舍+</el-button>
     <el-button size="large" type="danger" @click="deleteByIds()">批量删除-</el-button>
   </div>
+
+  <!-- 右侧：查询、清空 -->
+  <div>
+    <el-button type="success" size="large" @click="queryDorm()">查询</el-button>
+    <el-button type="primary" size="large" @click="clearMethod()">清空</el-button>
+  </div>
+</div>
   <!-- 表格 -->
   <el-table :data="dormTableData" stripe style="width: 100%" @selection-change="handleSelectionChange">
     <el-table-column type="selection" align="center" width="50" />

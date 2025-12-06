@@ -67,6 +67,9 @@
             <if test="dto.floorId != null">
                 and d.floor_id = #{dto.floorId}
             </if>
+            <if test="dto.fullCode != null and dto.fullCode != ''">
+                and d.full_code = #{dto.fullCode}
+            </if>
         </where>
         order by d.full_code
     </select>
