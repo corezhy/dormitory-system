@@ -19,11 +19,11 @@
         f.floor_number AS floorNumber,
         dr.full_code AS fullCode
         FROM student s
-        INNER JOIN building b ON s.building_id = b.id
-        INNER JOIN floor f ON s.floor_id = f.id
-        INNER JOIN class c ON s.class_id = c.id
-        INNER JOIN major m ON s.major_code = m.code
-        INNER JOIN dorm_room dr ON s.room_id = dr.id
+        LEFT JOIN building b ON s.building_id = b.id
+        LEFT JOIN floor f ON s.floor_id = f.id
+        LEFT JOIN class c ON s.class_id = c.id
+        LEFT JOIN major m ON s.major_code = m.code
+        LEFT JOIN dorm_room dr ON s.room_id = dr.id
         <where>
             <!-- 学号：精确匹配 -->
             <if test="dto.studentNo != null and dto.studentNo != ''">

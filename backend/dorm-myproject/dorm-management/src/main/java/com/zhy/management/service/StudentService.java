@@ -106,4 +106,10 @@ public interface StudentService extends IService<Student> {
      * @return
      */
     boolean getStuByMajorCodes(List<String> codes);
+
+    /**
+     * 删除已退宿学生
+     * @return
+     */
+    void removeStuByStatusIsZero();
 }

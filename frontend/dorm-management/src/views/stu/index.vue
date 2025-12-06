@@ -596,14 +596,15 @@ const deleteBatchByIds = () => {
         </template>
       </el-table-column>
       <el-table-column prop="phone" label="手机号" width="120" align="center" show-overflow-tooltip />
-      <el-table-column prop="status" label="状态" width="70" align="center">
+      <el-table-column prop="status" label="状态" width="84" align="center">
         <template #default="scope">
+          <span class="status-dot" :class="scope.row.status === 1 ? 'status-active' : 'status-inactive'"></span>
           {{ scope.row.status === 1 ? '在住' : '已退宿' }}
         </template>
       </el-table-column>
-      <el-table-column prop="majorName" label="专业名称" width="120" align="center" show-overflow-tooltip />
+      <el-table-column prop="majorName" label="专业名称" width="110" align="center" show-overflow-tooltip />
       <el-table-column prop="className" label="班级名称" width="120" align="center" show-overflow-tooltip />
-      <el-table-column prop="buildingName" label="楼栋名称" width="90" align="center" show-overflow-tooltip />
+      <el-table-column prop="buildingName" label="楼栋名称" width="80" align="center" show-overflow-tooltip />
       <el-table-column prop="floorNumber" label="楼层号" width="90" align="center" />
       <el-table-column prop="fullCode" label="房间号" width="100" align="center" show-overflow-tooltip />
       <el-table-column prop="bedNo" label="床位号" width="70" align="center" show-overflow-tooltip />
@@ -740,4 +741,23 @@ const deleteBatchByIds = () => {
   </el-dialog>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(.status-dot) {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+:deep(.status-active) {
+  background-color: #67c23a;
+  /* Element Plus success green */
+}
+
+:deep(.status-inactive) {
+  background-color: #f56c6c;
+  /* Element Plus error red */
+}
+</style>

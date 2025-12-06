@@ -84,6 +84,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         DormRoom dormRoom = dormRoomService.getIdAndBuildingIdByFullCode(dto.getFullCode());
         Long dormRoomId = dormRoom.getId();
 
+        //判断新增学生床铺号是否在宿舍包含范围内
+        if (dto.getBedNo() > dormRoom.getCapacity()) {
+            throw new BusinessException("宿舍[" + dto.getFullCode() + "没有" + dto.getBedNo() + "这个床位");
+        }
+
         // 2. 性别校验：通过 buildingId 查询楼栋性别限制
         Building building = buildingService.selectById(dormRoom.getBuildingId());
         if (building.getStatus() != 1) {
@@ -145,11 +150,14 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         BeanUtils.copyProperties(student, studentEditVo);
         //根据班级id查询班级名称
         String className = classService.getClassNameByClassId(student.getClassId());
-        //根据宿舍Id查询宿舍编号
-        String fullCode = dormRoomService.getFullCodeById(student.getRoomId());
-        //参数补全
         studentEditVo.setClassName(className);
-        studentEditVo.setFullCode(fullCode);
+        //根据宿舍Id查询宿舍编号，只有在住的学生才有宿舍信息
+        if (student.getRoomId() != null) {
+            String fullCode = dormRoomService.getFullCodeById(student.getRoomId());
+            studentEditVo.setFullCode(fullCode);
+        }else {
+            studentEditVo.setFullCode("");
+        }
         return studentEditVo;
     }
 
@@ -170,6 +178,29 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         if (!studentOld.getGender().equals(studentNew.getGender())) {
             throw new BusinessException("不允许修改学生的性别");
         }
+
+        //如果学生已退宿，释放空闲床位，结束后续操作
+        if (studentNew.getStatus() == 0) { //1 在住 0 已退宿
+            // 1.释放床位
+            if (studentOld.getRoomId() != null) {
+                dormRoomService.releaseAvailableBedsById(studentOld.getRoomId());
+            }
+            //2. 清空学生宿舍相关字段
+            boolean update = update(Wrappers.<Student>lambdaUpdate()
+                    .eq(Student::getId, id)
+                    .set(Student::getBuildingId, null)
+                    .set(Student::getFloorId, null)
+                    .set(Student::getRoomId, null)
+                    .set(Student::getBedNo, null)
+                    .set(Student::getStatus, (byte) 0)
+                    .set(Student::getUpdateTime, LocalDateTime.now()));
+            if (!update) {
+                throw new BusinessException("修改已退宿学生失败");
+            }
+            return;
+        }
+
+
         //获取原宿舍 fullCode
         String oldFullCode = "";
         if (studentOld.getRoomId() != null) {
@@ -199,6 +230,10 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             //校验宿舍是否可用
             if (dormRoomNew.getStatus() != 1) {
                 throw new BusinessException("宿舍[" + dormRoomNew.getFullCode() + "]当前不可用（停用或者维修中）");
+            }
+            //判断学生床铺号是否在床位数内
+            if (studentNew.getBedNo() > dormRoomNew.getCapacity()) {
+                throw new BusinessException("宿舍[" + dormRoomNew.getFullCode() + "]没有" + studentNew.getBedNo() + "这个床位");
             }
             //房间号存在，为newRoomId赋值
             newRoomId = dormRoomNew.getId();
@@ -314,7 +349,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public boolean hasStuByDormRoomId(Long dormRoomId) {
         return studentMapper.exists(Wrappers.<Student>lambdaQuery()
-                 .eq(Student::getRoomId, dormRoomId));
+                .eq(Student::getRoomId, dormRoomId));
     }
 
     /**
@@ -363,6 +398,17 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     public boolean getStuByMajorCodes(List<String> codes) {
         return studentMapper.exists(Wrappers.<Student>lambdaQuery()
                 .in(Student::getMajorCode, codes));
+    }
+
+    /**
+     * 删除已退宿学生
+     *
+     * @return
+     */
+    @Override
+    public void removeStuByStatusIsZero() {
+        int count = studentMapper.delete(Wrappers.<Student>lambdaQuery().eq(Student::getStatus, 0));//1在住 0已退宿
+        log.info("删除 {} 名已退宿学生", count);
     }
 
 
