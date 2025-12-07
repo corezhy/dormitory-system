@@ -1,6 +1,6 @@
 spring:
   application:
-    name: tlias-web-management
+    name: dormitory-system
   #配置数据库的连接信息
   datasource:
     url: jdbc:mysql://localhost:3306/dorm-myproject?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useServerPrepStmts=false
