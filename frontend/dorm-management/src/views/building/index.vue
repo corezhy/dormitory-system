@@ -228,11 +228,11 @@ const deleteBuilding = (id) => {
       </el-form-item>
 
       <el-form-item label="楼栋编码" prop="code">
-        <el-input v-model="buildingForm.code" style="width: 100%;" size="large" placeholder="请输入楼栋编码" />
+        <el-input v-model="buildingForm.code" style="width: 100%;" size="large" placeholder="请输入楼栋编码" :disabled="title === '修改楼栋'" />
       </el-form-item>
 
       <el-form-item label="性别类型" prop="genderType">
-        <el-select v-model="buildingForm.genderType" style="width: 100%;" size="large" placeholder="请选择性别类型">
+        <el-select v-model="buildingForm.genderType" style="width: 100%;" size="large" placeholder="请选择性别类型" :disabled="title === '修改楼栋'">
           <el-option v-for="gender in genders" :key="gender.value" :label="gender.name" :value="gender.value" />
         </el-select>
       </el-form-item>
