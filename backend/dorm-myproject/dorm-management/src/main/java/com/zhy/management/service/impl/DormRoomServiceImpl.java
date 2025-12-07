@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 宿舍管理service实现类
@@ -132,11 +133,45 @@ public class DormRoomServiceImpl extends ServiceImpl<DormRoomMapper, DormRoom> i
         if (id == null) {
             throw new BusinessException("请选择要修改的宿舍");
         }
-        //修改
-        boolean update = update(Wrappers.<DormRoom>lambdaUpdate()
-                .set(DormRoom::getCapacity, dto.getCapacity())
-                .eq(DormRoom::getId, id));
-        if (!update) {
+        //根据id查询原宿舍
+        DormRoom dormRoom = getById(id);
+        if (dormRoom == null) {
+            throw new BusinessException("宿舍不存在");
+        }
+        //获取宿舍总床位数
+        Integer oldCapacity = dormRoom.getCapacity();
+        //获取修改宿舍时传递的总床位数
+        Integer newCapacity = dto.getCapacity();
+        if (newCapacity == null || newCapacity <= 0) {
+            throw new BusinessException("床位数必须大于0");
+        }
+
+        //根据宿舍Id获取最大床位数和该宿舍学生人数
+        Map<String, Object> stats = studentService.getMaxBedAndStuCountByRoomId(id);
+
+        //获取最大已分配床位号（用于缩容校验）
+        Integer maxBed = (Integer) stats.get("maxBed");
+        //获取当前入住学生人数（用于计算空闲床铺数）
+        Integer stuCount = (Integer) stats.get("stuCount");
+
+        //缩容校验
+        if (newCapacity < oldCapacity) {
+            if (maxBed > newCapacity) {
+                throw new BusinessException("床位 [" + maxBed + "] 已被学生占用，无法将床位数减少至 " + newCapacity);
+            }
+        }
+
+        //重新计算空闲床位数：总床位 - 已入住人数
+        int newAvailableBeds = newCapacity - stuCount;
+        if (newAvailableBeds < 0) {
+            throw new BusinessException("宿舍学生人数超过新设定的床位数");
+        }
+
+        //更新宿舍信息
+        dormRoom.setCapacity(newCapacity);
+        dormRoom.setAvailableBeds(newAvailableBeds);
+        dormRoom.setUpdateTime(LocalDateTime.now());
+        if (!updateById(dormRoom)) {
             throw new BusinessException("修改宿舍失败");
         }
     }

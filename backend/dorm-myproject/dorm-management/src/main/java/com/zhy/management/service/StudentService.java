@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 学生管理service接口
@@ -112,4 +113,11 @@ public interface StudentService extends IService<Student> {
      * @return
      */
     void removeStuByStatusIsZero();
+
+    /**
+     * 根据宿舍Id获取最大床位数和该宿舍学生人数
+     * @param roomId
+     * @return
+     */
+    Map<String, Object> getMaxBedAndStuCountByRoomId(Long roomId);
 }

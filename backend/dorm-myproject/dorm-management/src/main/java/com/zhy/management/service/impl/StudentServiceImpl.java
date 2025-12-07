@@ -411,5 +411,35 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         log.info("删除 {} 名已退宿学生", count);
     }
 
+    /**
+     * 根据宿舍Id获取最大床位号和该宿舍学生人数
+     *
+     * @param roomId 宿舍ID
+     * @return 包含 "maxBed" 和 "stuCount" 的Map
+     */
+    @Override
+    public Map<String, Object> getMaxBedAndStuCountByRoomId(Long roomId) {
+        if (roomId == null) {
+            return Map.of("maxBed", 0, "stuCount", 0);
+        }
+
+        Map<String, Object> stats = studentMapper.getMaxBedAndStuCountByRoomId(roomId);
+
+        // 处理 max_bed：可能为 null（没人时）
+        Object maxBedObj = stats.get("max_bed");
+        Integer maxBed = (maxBedObj instanceof Number)
+                ? ((Number) maxBedObj).intValue()
+                : 0;
+
+        // 处理 stu_count：通常是 Long，转为 int
+        Object stuCountObj = stats.get("stu_count");
+        Integer stuCount = (stuCountObj instanceof Number)
+                ? ((Number) stuCountObj).intValue()
+                : 0;
+
+        // 返回结果（使用不可变 Map）
+        return Map.of("maxBed", maxBed, "stuCount", stuCount);
+    }
+
 
 }
