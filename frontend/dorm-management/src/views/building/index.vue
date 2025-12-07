@@ -160,6 +160,8 @@ const updateBuilding = async (id) => {
     ElMessage.error('网络错误，请检查网络后重试');
   }
   buildingId.value = id;
+  //点击修改楼栋按钮，重置表单校验
+  buildingFormRef.value?.resetFields();
 };
 
 // 启用/停用
