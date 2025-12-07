@@ -40,6 +40,7 @@ public class Floor {
     /**
      * 限定专业代码（逻辑外键 → major.code），NULL表示不限
      */
+    @TableField(updateStrategy = FieldStrategy.ALWAYS) //允许插入null值，表示不限
     @ApiModelProperty(value = "限定专业代码（null 表示不限）", example = "080901")
     private String majorCode;
 
