@@ -351,7 +351,7 @@ const deleteBatch = () => {
       </el-form-item>
       <!-- 第四行 -->
       <el-form-item label="是否启用" prop="isEnabled">
-        <el-select v-model="majorForm.isEnabled" style="width: 100%;" size="large" placeholder="请选择是否启用">
+        <el-select v-model="majorForm.isEnabled" style="width: 100%;" size="large" placeholder="请选择是否启用" :disabled="title === '修改专业'">
           <el-option v-for="isEnabled in isEnabledData" :key="isEnabled.value" :label="isEnabled.name"
             :value="isEnabled.value" />
         </el-select>
