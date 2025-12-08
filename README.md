@@ -22,17 +22,21 @@
 - MySQL 8.0+
 - Maven 3.6+
 
-(2)数据库初始化
--- 创建数据库
+# (2)数据库初始化
+- 创建数据库
 CREATE DATABASE dorm_system DEFAULT CHARACTER SET utf8mb4;
--- 执行项目中的SQL脚本
--- sql/schema.sql        (表结构)
--- sql/seed_data.sql     (演示数据，包含admin/admin123账户)
+- 执行项目中的SQL脚本
+- sql/schema.sql        (表结构)
+- sql/init_data.sql     (演示数据)
 
-(3)后端配置启动
--- 本地环境变量中配置阿里云OSS密钥
--- 修改dorm-management中的application.yaml:
+# (3)后端配置启动
+- 本地环境变量中配置阿里云OSS密钥
+- 修改dorm-management中的application.yaml:
   数据库连接信息  aliyunOSS配置
+
+# (4)接口文档访问地址
+- swagger: http://localhost:8080/swagger-ui.html
+- knife4j: http://localhost:8080/doc.html#/home
 
 
 
