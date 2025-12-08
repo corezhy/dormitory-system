@@ -73,27 +73,37 @@
           <div class="skills">
             <div class="skill-item">
               <label>Java</label>
-              <div class="skill-bar"><div class="skill-progress java"></div></div>
+              <div class="skill-bar">
+                <div class="skill-progress java"></div>
+              </div>
               <span>85%</span>
             </div>
             <div class="skill-item">
               <label>Spring Boot</label>
-              <div class="skill-bar"><div class="skill-progress spring"></div></div>
+              <div class="skill-bar">
+                <div class="skill-progress spring"></div>
+              </div>
               <span>80%</span>
             </div>
             <div class="skill-item">
               <label>MySQL</label>
-              <div class="skill-bar"><div class="skill-progress mysql"></div></div>
+              <div class="skill-bar">
+                <div class="skill-progress mysql"></div>
+              </div>
               <span>75%</span>
             </div>
             <div class="skill-item">
               <label>Maven</label>
-              <div class="skill-bar"><div class="skill-progress maven"></div></div>
+              <div class="skill-bar">
+                <div class="skill-progress maven"></div>
+              </div>
               <span>70%</span>
             </div>
             <div class="skill-item">
               <label>Git & GitHub</label>
-              <div class="skill-bar"><div class="skill-progress git"></div></div>
+              <div class="skill-bar">
+                <div class="skill-progress git"></div>
+              </div>
               <span>80%</span>
             </div>
           </div>
@@ -103,7 +113,8 @@
         <section class="timeline-section">
           <h3>📅 成长时间轴</h3>
           <div class="timeline-horizontal">
-            <div v-for="(item, index) in timeline" :key="index" class="timeline-item" :class="{ left: item.align === 'left', right: item.align === 'right' }">
+            <div v-for="(item, index) in timeline" :key="index" class="timeline-item"
+              :class="{ left: item.align === 'left', right: item.align === 'right' }">
               <div class="timeline-content">
                 <div class="timeline-date">{{ item.date }}</div>
                 <div class="timeline-card">
@@ -117,15 +128,22 @@
         </section>
       </div>
 
-      <!-- 联系我 -->
       <div class="contact-section">
-        <h3>📬 联系我</h3>
+        <h3>📬 联系与交流</h3>
         <p>
-          欢迎通过邮箱
-          <a href="mailto:1541317260@qq.com">1541317260@qq.com</a>
-          或在
-          <a href="https://github.com/corezhy" target="_blank">GitHub</a>
-          找到我。
+          我是一个热爱编程的Java学习者，正在持续构建完整的项目。
+          如果你对我的项目感兴趣，或有技术问题希望探讨：
+        </p>
+        <div class="contact-links">
+          <a class="github-btn" href="https://github.com/corezhy" target="_blank">
+            <i class="icon-github"></i> 访问我的GitHub主页
+          </a>
+          <a class="project-btn" href="https://github.com/corezhy/dorm-management-system" target="_blank">
+            <i class="icon-project"></i> 前往项目仓库 (Issues反馈)
+          </a>
+        </div>
+        <p style="font-size:0.9em; margin-top:1em; color:#aaa;">
+          * 通过GitHub Issues反馈问题是最佳方式，我会认真查看并回复。
         </p>
       </div>
 
@@ -290,11 +308,25 @@ const timeline = [
   transition: width 1s ease-in-out;
 }
 
-.skill-progress.java { width: 85%; }
-.skill-progress.spring { width: 80%; }
-.skill-progress.mysql { width: 75%; }
-.skill-progress.maven { width: 70%; }
-.skill-progress.git { width: 80%; }
+.skill-progress.java {
+  width: 85%;
+}
+
+.skill-progress.spring {
+  width: 80%;
+}
+
+.skill-progress.mysql {
+  width: 75%;
+}
+
+.skill-progress.maven {
+  width: 70%;
+}
+
+.skill-progress.git {
+  width: 80%;
+}
 
 /* 时间轴 */
 .timeline-horizontal {
@@ -403,12 +435,16 @@ const timeline = [
   .content-wrapper {
     flex-direction: column;
   }
-  .about-section, .timeline-section {
+
+  .about-section,
+  .timeline-section {
     min-width: 100%;
   }
+
   .timeline-horizontal {
     margin-left: 10px;
   }
+
   .profile-header h2 {
     font-size: 1.5rem;
   }
