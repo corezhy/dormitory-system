@@ -28,6 +28,9 @@ import java.util.Map;
 @Slf4j
 public class LoginServiceImpl extends ServiceImpl<LoginMapper, Employee> implements LoginService {
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     // 直接创建实例 参数： 强度参数（4~31，默认10）
     private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
@@ -80,7 +83,7 @@ public class LoginServiceImpl extends ServiceImpl<LoginMapper, Employee> impleme
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("id", employee.getId());
         dataMap.put("username", employee.getUsername());
-        String token = JwtUtils.generateJwt(dataMap);
+        String token = jwtUtils.generateJwt(dataMap);
         //返回data数据
         LoginVo loginVo = new LoginVo();
         //属性拷贝

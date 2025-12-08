@@ -32,3 +32,7 @@ aliyun:
     bucket-name: dorm-myproject
     region: cn-beijing
 
+#jwt令牌配置
+jwt:
+  secret: SVRIRUlNQQ== #签名密钥
+  expire: 43200000 #令牌过期时间
