@@ -30,8 +30,11 @@ CREATE DATABASE dorm_system DEFAULT CHARACTER SET utf8mb4;
 - sql/init_data.sql     (演示数据)
 
 # (3)后端配置启动
-- 本地环境变量中配置阿里云OSS密钥
-- 修改dorm-management中的application.yaml:
+- 本地环境变量中配置阿里云OSS密钥：
+以管理员身份打开命令行
+- set OSS_ACCESS_KEY_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+- set OSS_ACCESS_KEY_SECRET=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+- 修改dorm-management中的application.yaml：
   数据库连接信息  aliyunOSS配置
 
 # (4)接口文档访问地址
