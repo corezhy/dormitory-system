@@ -9,6 +9,7 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -33,10 +34,12 @@ public class Swagger2Configuration {
         return docket;
     }
     private ApiInfo apiInfo() {
+        Contact contact = new Contact("your_name", "", "");
         return new ApiInfoBuilder()
                 .title("宿舍管理API文档")
                 .description("宿舍管理API文档")
                 .version("1.0")
+                .contact(contact)
                 .build();
     }
 }

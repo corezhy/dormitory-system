@@ -11,7 +11,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@Configuration
+//@Configuration 注释掉，使用Swagger2Configuration2
 @EnableSwagger2
 public class SwaggerConfiguration {
 
@@ -27,7 +27,7 @@ public class SwaggerConfiguration {
    }
 
    private ApiInfo buildApiInfo() {
-      Contact contact = new Contact("张宏宇","","");
+      Contact contact = new Contact("your_name","","");
       return new ApiInfoBuilder()
               .title("宿舍管理-平台管理API文档")
               .description("宿舍管理后台api")
