@@ -30,18 +30,21 @@ CREATE DATABASE dorm_system DEFAULT CHARACTER SET utf8mb4;
 - sql/init_data.sql     (演示数据)
 
 # (3)后端配置启动
-- 本地环境变量中配置阿里云OSS密钥：
-以管理员身份打开命令行
-- set OSS_ACCESS_KEY_ID=your_key_id
-- set OSS_ACCESS_KEY_SECRET=your_key_secret
-执行如下命令让更改生效
-- setx OSS_ACCESS_KEY_ID "%OSS_ACCESS_KEY_ID%"
-- setx OSS_ACCESS_KEY_SECRET "%OSS_ACCESS_KEY_SECRET%"
-执行如下命令，验证环境变量是否生效
-- echo %OSS_ACCESS_KEY_ID%
-- echo %OSS_ACCESS_KEY_SECRET%
-- 修改dorm-management中的application.yaml：
-  数据库连接信息  aliyunOSS配置
+1.本地环境变量中配置阿里云OSS密钥：  
+- 以管理员身份打开命令行，执行：    
+set OSS_ACCESS_KEY_ID=your_key_id  
+set OSS_ACCESS_KEY_SECRET=your_key_secret  
+- 执行如下命令让更改生效：    
+setx OSS_ACCESS_KEY_ID "%OSS_ACCESS_KEY_ID%"  
+setx OSS_ACCESS_KEY_SECRET "%OSS_ACCESS_KEY_SECRET%"  
+- 执行如下命令，验证环境变量是否生效：    
+echo %OSS_ACCESS_KEY_ID%  
+echo %OSS_ACCESS_KEY_SECRET%
+
+2.修改dorm-management中的application.yaml：    
+- 数据库连接信息
+- aliyunOSS配置
+- jwt配置
 
 # (4)接口文档访问地址
 - swagger: http://localhost:8080/swagger-ui.html
