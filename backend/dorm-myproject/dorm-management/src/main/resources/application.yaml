@@ -3,10 +3,10 @@ spring:
     name: dormitory-system
   #配置数据库的连接信息
   datasource:
-    url: jdbc:mysql://localhost:3306/dorm-myproject?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useServerPrepStmts=false
+    url: jdbc:mysql://localhost:3306/${DB_NAME:dorm_myproject}?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useServerPrepStmts=false
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: zhy196587
+    username: ${DB_USERNAME:your_db_username}
+    password: ${DB_PASSWORD:your_db_password}
   #告诉 Spring Boot 不要自动配置 Spring Security 相关功能(访问knife4j或swagger就不会要求登录，并且可以正常使用BCrypt)
   autoconfigure:
     exclude:
@@ -28,11 +28,11 @@ logging:
 #aliyunOSS配置
 aliyun:
   oss:
-    endpoint: https://oss-cn-beijing.aliyuncs.com
-    bucket-name: dorm-myproject
-    region: cn-beijing
+    endpoint: https://oss-cn-beijing.aliyuncs.com # OSS 访问域名（北京区域）
+    bucket-name: ${OSS_BUCKET_NAME:your_oss_bucket_name} # 存储空间名称
+    region: cn-beijing # 所在地域 ID
 
 #jwt令牌配置
 jwt:
-  secret: SVRIRUlNQQ== #签名密钥
+  secret: ${JWT_SECRET:your_base64_encoded_secret} #签名密钥
   expire: 43200000 #令牌过期时间
