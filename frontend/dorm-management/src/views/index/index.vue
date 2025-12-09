@@ -138,7 +138,7 @@
           <a class="github-btn" href="https://github.com/corezhy" target="_blank">
             <i class="icon-github"></i> 访问我的GitHub主页
           </a>
-          <a class="project-btn" href="https://github.com/corezhy/dorm-management-system" target="_blank">
+          <a class="project-btn" href="https://github.com/corezhy/dormitory-system" target="_blank">
             <i class="icon-project"></i> 前往项目仓库 (Issues反馈)
           </a>
         </div>
