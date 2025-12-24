@@ -41,7 +41,7 @@ setx OSS_ACCESS_KEY_SECRET "%OSS_ACCESS_KEY_SECRET%"
 echo %OSS_ACCESS_KEY_ID%  
 echo %OSS_ACCESS_KEY_SECRET%
 
-2.修改dorm-management中的application.yaml：    
+2.修改dorm-management中的application.yaml.template：    
 - 数据库连接信息
 - aliyunOSS配置
 - jwt配置
